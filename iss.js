@@ -17,7 +17,7 @@ const fetchMyIP = function(callback) {
 };
 
 const fetchCoordsByIP = function(ip, callback) {
-  request(`https://ipwho.is/json/${ip}`, (error, response, body) => {
+  request(`http://ipwho.is/${ip}`, (error, response, body) => {
     if (error) {
       return callback(error, null);
     }
@@ -25,13 +25,14 @@ const fetchCoordsByIP = function(ip, callback) {
       const msg = `Status code: ${response.statusCode} during fetching \n Response: ${body}`;
       return callback(Error(msg), null);
     } else {
-      const data = JSON.parse(body)
-      let cordinates = {};
-      cordinates.latitude = data['latitude'];
-      cordinates.longitude = data['longitude'];
-      callback(null, cordinates);
+      const data = JSON.parse(body);
+      const coordinates = {
+        latitude: data.latitude,
+        longitude: data.longitude
+      };
+      callback(null, coordinates);
     }
-});
+  });
 };
 
 module.exports = { fetchMyIP, fetchCoordsByIP };
