@@ -16,4 +16,23 @@ const fetchMyIP = function(callback) {
   });
 };
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIP = function(ip, callback) {
+  request(`https://ipwho.is/json/${ip}`, (error, response, body) => {
+    if (error) {
+      return callback(error, null);
+    }
+    if (response.statusCode !== 200) {
+      const msg = `Status code: ${response.statusCode} during fetching \n Response: ${body}`;
+      return callback(Error(msg), null);
+    } else {
+      const data = JSON.parse(body)
+      let cordinates = {};
+      cordinates.latitude = data['latitude'];
+      cordinates.longitude = data['longitude'];
+      callback(null, cordinates);
+    }
+});
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
+//module.exports = { fetchCoordsByIP };
